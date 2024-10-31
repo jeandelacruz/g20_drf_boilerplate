@@ -1,6 +1,6 @@
 from rest_framework.viewsets import generics
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, permissions
 from django.shortcuts import get_object_or_404
 from .serializers import UserSerializer
 from .models import User
@@ -12,6 +12,13 @@ class UserListCreateView(generics.GenericAPIView):
     serializer_class = UserSerializer
     http_method_names = ['get', 'post']
     pagination_class = CustomPagination
+    permission_classes = [permissions.IsAuthenticated]
+
+    # Definir los permisos por verbos
+    # def get_permissions(self):
+    #     if self.request.method == 'POST':
+    #         return [permissions.IsAuthenticated()]
+    #     return [permissions.AllowAny()]
 
     def get(self, request):
         paginator = self.pagination_class()
