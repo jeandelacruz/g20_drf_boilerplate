@@ -4,16 +4,22 @@ from rest_framework import status
 from django.shortcuts import get_object_or_404
 from .serializers import UserSerializer
 from .models import User
+from .pagination import CustomPagination
 
 
 class UserListCreateView(generics.GenericAPIView):
-    queryset = User.objects.all()
+    queryset = User.objects.all().order_by('id')
     serializer_class = UserSerializer
     http_method_names = ['get', 'post']
+    pagination_class = CustomPagination
 
     def get(self, request):
-        serializer = self.serializer_class(self.get_queryset(), many=True)
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
+        paginator = self.pagination_class()
+        paginated_queryset = paginator.paginate_queryset(
+            self.get_queryset(), request
+        )
+        serializer = self.serializer_class(paginated_queryset, many=True)
+        return paginator.get_paginated_response(serializer.data)
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
