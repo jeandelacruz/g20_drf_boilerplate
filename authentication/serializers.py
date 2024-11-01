@@ -18,7 +18,7 @@ class LoginSerializer(serializers.Serializer):
 
         # Validar que el usuario exista
         if not user:
-            raise AuthenticationFailed(f'Invalid username or password')
+            raise AuthenticationFailed('Invalid username or password')
 
         # Validar que el usuario este activo
         if not user.is_active:
