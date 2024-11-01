@@ -58,3 +58,22 @@ class ResetPasswordSerializer(serializers.Serializer):
         )
 
         return super().validate(attrs)
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    password = serializers.CharField(max_length=120)
+    confirm_password = serializers.CharField(max_length=120)
+
+    def validate_confirm_password(self, value):
+        password = self.initial_data.get('password')
+        if value != password:
+            raise serializers.ValidationError(
+                'Password and Confirm Password do not match'
+            )
+        return value
+
+    def update(self, instance, validated_data):
+        password = validated_data['password']
+        instance.set_password(password)
+        instance.save()
+        return validated_data

@@ -1,10 +1,10 @@
-from rest_framework import status
+from rest_framework import status, permissions
 from rest_framework.response import Response
 from rest_framework.viewsets import generics
 from rest_framework_simplejwt.views import TokenViewBase
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from .serializers import LoginSerializer, ResetPasswordSerializer
+from .serializers import LoginSerializer, ResetPasswordSerializer, ChangePasswordSerializer
 
 
 class LoginView(generics.GenericAPIView):
@@ -30,4 +30,16 @@ class ResetPasswordView(generics.GenericAPIView):
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ChangePasswordView(generics.GenericAPIView):
+    serializer_class = ChangePasswordSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    http_method_names = ['put']
+
+    def put(self, request):
+        serializer = self.serializer_class(request.user, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
