@@ -61,7 +61,7 @@ ROOT_URLCONF = 'application.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -167,3 +167,12 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1)
 }
+
+# Configurar Email Server
+# https://docs.djangoproject.com/en/5.1/topics/email/
+# https://docs.djangoproject.com/en/5.1/ref/settings/#std-setting-EMAIL_HOST
+EMAIL_HOST = config('MAIL_SERVER')
+EMAIL_PORT = config('MAIL_PORT', cast=int)
+EMAIL_HOST_USER = config('MAIL_USERNAME')
+EMAIL_HOST_PASSWORD = config('MAIL_PASSWORD')
+EMAIL_USE_TLS = config('MAIL_USE_TLS', cast=bool)

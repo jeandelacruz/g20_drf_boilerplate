@@ -4,7 +4,7 @@ from rest_framework.viewsets import generics
 from rest_framework_simplejwt.views import TokenViewBase
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from .serializers import LoginSerializer
+from .serializers import LoginSerializer, ResetPasswordSerializer
 
 
 class LoginView(generics.GenericAPIView):
@@ -21,3 +21,13 @@ class LoginView(generics.GenericAPIView):
 class RefreshTokenView(TokenViewBase):
     serializer_class = TokenRefreshSerializer
     authentication_classes = [JWTAuthentication]
+
+
+class ResetPasswordView(generics.GenericAPIView):
+    serializer_class = ResetPasswordSerializer
+    http_method_names = ['post']
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return Response(status=status.HTTP_204_NO_CONTENT)

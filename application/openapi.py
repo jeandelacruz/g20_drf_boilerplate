@@ -8,7 +8,8 @@ view_swagger = get_schema_view(
         title='DRF Boilerplate',
         description='Documentación de las apis del Boilerplate',
         default_version='0.1'
-    )
+    ),
+    public=True
 )
 
 urlpatterns = [

@@ -2,6 +2,11 @@ from rest_framework import serializers
 from django.contrib.auth import authenticate
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.shortcuts import get_object_or_404
+from secrets import token_hex
+
+from users.models import User
+from application.utils.mailing import Mailing
 
 
 class LoginSerializer(serializers.Serializer):
@@ -30,3 +35,26 @@ class LoginSerializer(serializers.Serializer):
             'access_token': str(token.access_token),
             'refresh_token': str(token)
         }
+
+
+class ResetPasswordSerializer(serializers.Serializer):
+    email = serializers.EmailField(max_length=120)
+
+    def validate(self, attrs):
+        email = attrs.get('email')
+        new_password = token_hex(6)
+
+        mailing = Mailing()
+
+        # Validar el usuario
+        user = get_object_or_404(
+            User, email=email, is_active=True
+        )
+        user.set_password(new_password)
+        user.save()
+
+        mailing.mail_reset_password(
+            email, user.first_name, new_password
+        )
+
+        return super().validate(attrs)

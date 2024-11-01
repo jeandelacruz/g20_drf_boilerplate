@@ -65,4 +65,10 @@ DB_USER='postgres'
 DB_PASSWORD=''
 DB_HOST='127.0.0.1'
 DB_PORT='5432'
+
+MAIL_SERVER='smtp.gmail.com'
+MAIL_PORT=587
+MAIL_USE_TLS=True
+MAIL_USERNAME='@gmail.com'
+MAIL_PASSWORD=''
 ```

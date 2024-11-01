@@ -12,7 +12,7 @@ class UserListCreateView(generics.GenericAPIView):
     serializer_class = UserSerializer
     http_method_names = ['get', 'post']
     pagination_class = CustomPagination
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     # Definir los permisos por verbos
     # def get_permissions(self):
